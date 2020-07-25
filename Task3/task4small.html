@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript">
+
+function test(e)
+{
+if(!( e.which >= 97 && e.which <=122))
+{
+e.preventDefault(); 
+
+}
+
+}
+
+</script>
+
+</head>
+
+<body>
+
+allows small case<input type="text" id="mytxt" onkeypress ="test(event)">
+
+
+</body>
+
+</html>

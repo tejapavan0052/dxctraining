@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript">
+
+function test(e)
+{
+if(!( e.which >= 97 && e.which <=122 || e.which >=65 && e.which<=90))
+
+
+{
+e.preventDefault(); 
+
+}
+
+}
+
+</script>
+
+</head>
+
+<body>
+
+only alphabets<input type="text" id="mytxt" onkeypress ="test(event)">
+
+
+</body>
+
+</html>
