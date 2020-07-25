@@ -1,21 +1,29 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script type="text/javascript">
- function showCoords(event) 
- {
+	<style>
+html, body {
+  height: 100%;
+  margin: 0;
+}
+.full-height {
+  height: 100%;
+}
+</style>
+
+</head>
+
+<script>
+function showCoords(event) {
   var x = event.screenX;
-  var y = eevent.screenY;
+  var y = event.screenY;
   var coords = "X coords: " + x + ", Y coords: " + y
   document.getElementById("demo").innerHTML = coords;
-}	
+}
 </script>
-</head>
 <body>
-<p><strong>Tip:</strong>click different places</p>
-
-	
-<p onmousemove="showCoords()"></p>
+<p id="demo"></p>
+<div class="full-height" onclick="showCoords(event)"></div>
 
 </body>
 </html>
