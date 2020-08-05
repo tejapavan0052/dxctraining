@@ -1,0 +1,124 @@
+create table clg(
+cid int primary key,
+cname varchar(20)
+);
+
+
+create table stud
+(
+stud_id int primary key,
+clg_id int references clg(cid),
+gender varchar(6),
+sem int,
+marks int
+);
+insert into clg values('121','klu');
+insert into clg values('122','jnu');
+insert into clg values('123','srm');
+
+alter table stud
+add sname varchar(20);
+
+insert into stud values('101','121','male','1','67','Rohit');
+insert into stud values('102','121','male','3','67','Rahul');
+insert into stud values('103','121','female','1','67','rajeshwari');
+insert into stud values('104','121','male','5','67','Virat');
+
+
+insert into stud values('105','122','male','5','67','Dawan');
+insert into stud values('106','122','female','3','67','smrithi');
+insert into stud values('107','122','female','1','67','harampreet');
+insert into stud values('108','122','male','5','67','DK');
+
+
+insert into stud values('109','123','male','5','67','Dhoni');
+insert into stud values('110','123','male','5','67','Hardik');
+insert into stud values('111','123','female','3','67','Shifali');
+insert into stud values('112','123','male','3','67','Jadeja');
+insert into stud values('113','123','male','3','67','kuldeep');
+
+
+select sname , clg_id
+  2  from stud;
+
+
+SNAME                    CLG_ID
+-------------------- ----------
+Rohit                       121
+Rahul                       121
+rajeshwari                  121
+Virat                       121
+Dawan                       122
+smrithi                     122
+harampreet                  122
+DK                          122
+Dhoni                       123
+Hardik                      123
+Shifali                     123
+
+
+
+SQL> select count(sname) , clg_id
+  2  from stud
+  3  group by clg_id;
+
+COUNT(SNAME)     CLG_ID
+------------ ----------
+           5        123
+           4        121
+           4        122
+
+->display total no of female stud and male stud in all clgs
+
+
+select count(sname), gender
+from stud
+group by gender;
+
+COUNT(SNAME) GENDER
+------------ ------
+           9 male
+           4 female
+
+->display  no of female stud and male stud in rspctv clgs
+
+select count(sname), gender, clg_id
+from stud
+group by gender , clg_id
+
+COUNT(SNAME) GENDER     CLG_ID
+------------ ------ ----------
+           2 male          122
+           2 female        122
+           4 male          123
+           3 male          121
+           1 female        123
+           1 female        121
+
+6 rows selected.
+
+
+
+
+
+display  no of female stud and male stud in rspctv clgs
+
+select count(sname), gender, clg_id
+from stud
+group by gender , clg_id;
+
+
+
+display  no of  stud studying in a sem irrspctv of clg
+
+ select count(sname), sem
+ from stud
+group by sem;
+
+COUNT(SNAME)        SEM
+------------ ----------
+           3          1
+           5          5
+           5          3
+
+

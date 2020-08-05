@@ -1,0 +1,106 @@
+create table employ(
+emp_id  varchar(20) primary key,
+emp_n varchar(20),
+empF_n varchar(20),
+empM_n varchar(20),
+age int check(age between 20 and 50),
+city varchar(20) check(city like 'B%'),
+Design varchar(20),
+emp_dob date
+);
+insert into employ values('emp01','abc','xyz','asd','49','Bang','ass.manager',to_date('20-03-1998','dd-mm-yyyy'));
+insert into employ values('emp02','fbc','dyz','add','28','Binfsk','manager',to_date('10-03-1998','dd-mm-yyyy'));
+insert into employ values('emp03','abc','xyz','asd','49','Bang','ass.manager',to_date('30-03-1998','dd-mm-yyyy'));
+insert into employ values('emp04','abc','xyz','asd','49','Bang','ass.manager',to_date('20-03-1998','dd-mm-yyyy'));
+
+
+ desc employ;
+ Name                                      Null?    Type
+ ----------------------------------------- -------- ----------------------------
+ EMP_ID                                    NOT NULL VARCHAR2(20)
+ EMP_N                                              VARCHAR2(20)
+ EMPF_N                                             VARCHAR2(20)
+ EMPM_N                                             VARCHAR2(20)
+ AGE                                                NUMBER(38)
+ CITY                                               VARCHAR2(20)
+ DESIGN                                             VARCHAR2(20)
+ EMP_DOB                                            DATE
+------------------------------------------------------------------
+->update any employe and change city name
+
+update employ set city='Bezawada'
+where emp_id='emp01';
+
+SQL> select *from employ;
+
+EMP_ID               EMP_N                EMPF_N
+-------------------- -------------------- --------------------
+EMPM_N                      AGE CITY                 DESIGN
+-------------------- ---------- -------------------- --------------------
+EMP_DOB
+---------
+emp01                abc                  xyz
+asd                          49 Bezawada             ass.manager
+20-MAR-98
+
+emp02                fbc                  dyz
+add                          28 Binfsk               manager
+10-MAR-98
+
+EMP_ID               EMP_N                EMPF_N
+-------------------- -------------------- --------------------
+EMPM_N                      AGE CITY                 DESIGN
+-------------------- ---------- -------------------- --------------------
+EMP_DOB
+---------
+
+emp03                abc                  xyz
+asd                          49 Bang                 ass.manager
+30-MAR-98
+
+emp04                abc                  xyz
+asd                          49 Bang                 ass.manager
+
+EMP_ID               EMP_N                EMPF_N
+-------------------- -------------------- --------------------
+EMPM_N                      AGE CITY                 DESIGN
+-------------------- ---------- -------------------- --------------------
+EMP_DOB
+---------
+20-MAR-98
+----------------------------------------------------------------------------
+-> delete an employee
+delete from employ where emp_id='emp01';
+
+ delete from employ where emp_id='emp01';
+
+1 row deleted.
+
+SQL> commit;
+
+Commit complete.
+
+SQL> delete from employ;
+
+3 rows deleted.
+
+SQL> rollback;
+
+Rollback complete.
+
+SQL> select emp_n,empF_n,empM_n emp_dob from employ;
+
+EMP_N                EMPF_N               EMP_DOB
+-------------------- -------------------- --------------------
+fbc                  dyz                  add
+abc                  xyz                  asd
+abc                  xyz                  asd
+
+
+ select SUBSTR(emp_n,1,1)||'.'||SUBSTR(empF_n,1,1)||'.'||empM_n as Name from employ where emp_id='emp02';
+
+
+NAME
+------------------------------
+f.d.add
+

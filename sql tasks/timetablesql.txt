@@ -1,0 +1,39 @@
+create table timetable(
+day varchar(10),
+session_no int,
+room_no int,
+faculty_name varchar(20),
+sem_no int,
+constraint pkk primary key(session_no,faculty_name,room_no)
+);
+insert into timetable values('mon','1','121','pavan','1');
+insert into timetable values('mon','1','122','uyt','1');
+insert into timetable values('mon','2','122','pavan','1');
+insert into timetable values('tue','1','122','huu','1');
+insert into timetable values('mon','1','121','van','1');
+---------------------------
+select *from timetable;
+
+DAY        SESSION_NO    ROOM_NO FACULTY_NAME             SEM_NO
+---------- ---------- ---------- -------------------- ----------
+mon                 1        121 pavan                         1
+mon                 1        122 uyt                           1
+mon                 2        122 pavan                         1
+tue                 1        122 huu                           1
+mon                 1        121 van    
+
+
+
+
+
+
+--------------------------------------
+create table timetab(
+day varchar(10),
+session_no int,
+room_no int,
+faculty_name varchar(20),
+sem_no int,
+constraint kjl primary key(session_no,faculty_name,room_no)
+);          
+insert into timetab values('mon','1','121','pavan','1');             1
