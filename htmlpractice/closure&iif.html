@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<script type="text/javascript">
+
+
+countFun=(function count(){
+var ctr=0;//once
+
+return function()
+{
+return ++ctr;
+}
+
+})();
+
+  function someFun()
+{
+ctr=10;
+}
+</script>
+
+</head>
+
+<body>
+
+<input type="submit" value="like" onclick="alert(countFun())">
+
+<input type="submit" value="some othe value"
+onclick="someFun()">
+
+</body>
+
+</html>

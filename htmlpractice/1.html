@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript">
+
+function test(e)
+{
+if(!( e.which >= 97 && e.which <=122 || e.which >=65 && e.which<=90))
+
+{
+e.preventDefault(); 
+}
+}
+function checkPassword(form) { 
+                password1 = form.password1.value; 
+                password2 = form.password2.value; 
+  
+                 
+                if (password1 == '') 
+                    alert ("Please enter Password"); 
+                      
+            
+                else if (password2 == '') 
+                    alert ("Please enter confirm password"); 
+                      
+                     
+                else if (password1 != password2) { 
+                    alert ("\nPassword did not match: Please try again...") 
+                    return false; 
+                } 
+                else{ 
+                    alert("Password Match") 
+                    return true; 
+                }
+   
+                 
+            } 
+</script>	
+</head>
+<body>
+<center>
+<div style="height: 100px;width: 300px;">
+<h1>Registration Form</h1>
+
+</center>
+<table align="center">
+<tr>	
+<td><input type="text" placeholder="employee name" onkeypress ="test(event)"></td>	
+</tr>
+<tr>
+<td>
+DOB  
+<br>
+ <input type="date"></tr>
+</td>
+<tr>
+	
+</tr>
+<tr>
+<td><input type="password" placeholder="password1" name="pwd"></td>
+</tr>
+<tr>
+<td><input type="conform password" placeholder="password2" name="pwd"></td>
+</tr>
+<tr>
+<td></td>	
+<td>
+<input type="submit" name="register">
+</td></tr>
+</table>
+    
+</div>
+</center>
+</body>
+</html>

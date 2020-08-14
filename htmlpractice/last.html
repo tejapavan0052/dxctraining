@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <style type="text/css">
+body
+{
+background: url("img.jfif");
+background-repeat: no-repeat;
+background-size: cover;
+opacity: 0.8;
+}
+
+</style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box;}
+
+.input-container {
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+.icon {
+  padding: 10px;
+  background: green;
+  color: white;
+  min-width: 50px;
+  text-align: center;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  outline: none;
+}
+
+.input-field:focus {
+  border: 2px solid green;
+}
+
+.btn {
+  background-color: green;
+  color: white;
+  padding: 15px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+}
+
+.btn:hover {
+  opacity: 1;
+}
+</style>
+<script type="text/javascript">
+
+types=["UG","PG"];
+
+
+function filldd()
+{
+var typeDD=document.getElementById('type');
+for(i=0;i<types.length;i++){
+var ele=document.createElement('option');
+ele.text=types[i];
+typeDD.add(ele,i+1)
+}
+}
+
+   data=[['CSE','ECE','ECSE','MECH','CIVIL'],
+   ['M.Tech CSE','M.Tech ECE','M.Tech ECSE','M.Tech MECH','M.Tech CIVIL']];
+
+
+function fillData()
+{
+var typeDDN=document.getElementById('type');
+  var selectedIdx= typeDDN.selectedIndex;
+
+console.log(selectedIdx);
+
+var dataDD=document.getElementById('dd');
+
+dataDD.innerText=null;
+
+
+for(i=0;i<data[selectedIdx-1].length;i++)
+{
+
+var ele=document.createElement('option');
+ele.text=data[selectedIdx-1][i];
+
+dataDD.add(ele,i+1)
+
+}
+
+}
+
+function test(e)
+{
+
+if(!( e.which >= 65 && e.which <=122 ))
+{
+e.preventDefault();
+
+}
+
+}
+function passwordvalidate() {
+var pwd=document.getElementById('pwd');
+var pwd=document.getElementById('cpwd');
+if(pwd!=cpwd)
+{
+  alert('password not matched');
+  return false;
+}
+
+}
+
+</script>
+
+</head>
+
+<body>
+
+<form action="dob.html" style="max-width:300px;margin:auto">
+   <center><h2> REGISTRATION FORM</h2></center>
+  <div class="input-container">
+    <i class="fa fa-user icon"></i>
+    <input class="input-field" type="text" placeholder="Employee name" name="usrnm"  onkeypress ="test(event)" required>
+  </div>
+ 
+  <div class="input-container">
+    <i class="fa fa-key icon"></i>
+    <input type="password" name="pwd" id="pwd" required>
+  </div>
+
+  <div class="input-container">
+    <i class="fa fa-lock icon"></i>
+    <input type="password" name="cpwd" id="cpwd"required>
+  </div>
+
+ </div>
+ <div class="input-container">
+    <i class="fa fa-book icon"></i>
+    <input class="input-field" type="text" placeholder=" Education" name="course" required>
+    <body onload="filldd()">
+
+     <select id="type" onchange="fillData()">
+     <option> course</option>
+     </select>
+
+      <select id="dd">
+     <option>select</option>
+      </select>
+
+ 
+ </div>
+<div class="input-container">
+  <i class="fa fa-calender icon"></i>
+  <input class="input-field" type='date'  min='2000-03-20' max='2018-03-20' required>
+
+</div>
+
+
+
+</body>
+ 
+  <button type="submit" class="btn">Register</button>
+</form>
+
+</body>
+</html>

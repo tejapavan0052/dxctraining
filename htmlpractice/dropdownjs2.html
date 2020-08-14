@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript">
+function filldd() {
+
+		animal=['lion','cat','tiger','dog'];
+		var dropdwn=document.getElementById('dd');
+		for ( i = 0; i<animal.length; i++) {
+
+            var newopt=document.createElement('option');
+			newopt.text=animal[i];
+			dropdwn.add(newopt,i+1)
+		}
+	}
+
+
+</script>
+</head>
+<body onload="filldd()">
+	<select id="dd">
+	<option>select animal</option>	
+	</select>
+
+
+</body>
+</html>

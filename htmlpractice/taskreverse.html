@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script type="text/javascript">
+function reverse1(str){
+  var a = "";
+  for(var i = 0; i <= str.length/2; i++){
+    a = str[i];
+    str[i] = str[str.length-i-1];
+    str[str.length-i-1] = a;
+  }
+  return str;
+}
+var str = "abcdef";
+reverse1(str);
+</script>
+</head>
+
+<body>
+
+</body>
+</html>
