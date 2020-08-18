@@ -1,0 +1,68 @@
+===============================Question1-output===================================
+This
+Is
+Java
+Programming
+
+===============================Question2-output=========================
+sihT
+sI
+avaJ
+gnimmargorP
+
+=================================Question-3==========================================
+
+
+
+
+-------cars in janatha garage----------------------------------
+Carzs [carname=Benz, manyear=1990]
+Carzs [carname=Tata, manyear=1991]
+Carzs [carname=Swift, manyear=1992]
+Carzs [carname=Innova, manyear=1993]
+-------cars in vendor cars----------------------------------
+Carzs [carname=Ferrari, manyear=1884]
+Carzs [carname=Fortuner, manyear=1885]
+Carzs [carname=Scoda, manyear=1886]
+Carzs [carname=Nissan, manyear=1888]
+---------================task3_2==========---------------
+----------a.manfacture year--------------------
+1990
+1993
+1992
+1991
+1884
+1885
+1886
+1888
+-----------b.carname---------------------
+Benz
+Innova
+Swift
+Tata
+Ferrari
+Fortuner
+Scoda
+Nissan
+-----------------------========task3_3===========================--------------------
+-------------------showroom1---------------------
+1990-
+Benz
+1993-
+Innova
+1992-
+Swift
+1991-
+Tata
+-------------------showroom2---------------------
+1884-
+Ferrari
+1885-
+Fortuner
+1886-
+Scoda
+1888-
+Nissan
+
+==============================================Question4-output=================================
+50 Marks are valid
