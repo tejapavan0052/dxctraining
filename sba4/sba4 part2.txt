@@ -1,0 +1,888 @@
+========sba4 part-2==========
+
+---home controller----------
+
+package com.bootmvctask.bootmvctask;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.bootmvctask.bootmvctask.dao.DxcUsersDao;
+import com.bootmvctask.bootmvctask.model.DxcUsers;
+
+@Controller
+public class HomeController {
+
+	@Autowired
+	DxcUsersDao userDao;
+
+	@RequestMapping(value = "/save")
+	public String home() {
+		return "home";
+	}
+
+	@PostMapping("/regdata")
+	public String regdata(Model model, @ModelAttribute DxcUsers dxcUsers) {
+		System.out.println(dxcUsers);
+		String status = userDao.saveUser(dxcUsers);
+		model.addAttribute("status", status);
+		return "display";
+	}
+	
+	@GetMapping("/login")
+	public String getLogin(@RequestParam("userid") int userid, @RequestParam("username") String username,
+			@RequestParam("password") String password, Model model) {
+		System.out.println("Username : "+username);
+		DxcUsers user = null;
+
+		user = userDao.getUserInfo(userid);
+		
+		if (username.equals(user.getUsername()) && password.equals(user.getPassword())) {
+			return "success";
+		}
+
+		model.addAttribute("message", "Login Failed Please Enter Valid User Info");
+		return "Fail";
+	}
+	
+	@GetMapping("/displayLogin")
+	public String getLoginInfo() {
+		return "userLogin";
+	}
+	@GetMapping("/pass")
+	public String getSec(@RequestParam("userid") int userid,@RequestParam("security_question") String security_question,
+			@RequestParam("security_answer") String security_answer,Model model) {
+		DxcUsers user = null;
+
+		user = userDao.getUserInfo(userid);
+		
+		if (security_question.equals(user.getSecurity_question()) && security_answer.equals(user.getSecurity_answer())) {
+			model.addAttribute("userId", userid);
+			return "Changepass";
+		}
+
+		model.addAttribute("message", "Login Failed Please Enter Valid User Info");
+		
+				return "forgotpassword";
+		
+	}
+	@GetMapping("/forgotpass")
+	public String getsecInfo() {
+		return "forgotpassword";
+     
+}
+	@GetMapping("/changepass")
+	public String changpass(@RequestParam String password, @RequestParam String conformPass,@RequestParam("userid") int userId) {
+		System.out.println("userId : "+userId);
+		if(password.equals(conformPass)) {
+			userDao.changePassword(password,userId);
+			return "success";
+		}
+		return "ChangePass";
+}
+	/*@GetMapping("/error")
+	public String errorpg() {
+		return "forgotpassword";
+	}*/
+}
+---------------
+
+-------------users----------
+package com.bootmvctask.bootmvctask.model;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+@Entity
+public class DxcUsers {
+	
+	
+	@Id
+	 @Column(length = 5)
+	
+	int userid;
+	 @Column(length = 15)
+	String username;
+	 @Column(length = 15)
+	String password;
+	 @Column(length = 50)
+	String security_question;
+	 @Column(length = 15)
+	String security_answer;
+	
+	
+	public int getUserid() {
+		return userid;
+	}
+	public void setUserid(int userid) {
+		this.userid = userid;
+	}
+	public String getUsername() {
+		return username;
+	}
+	public void setUsername(String username) {
+		this.username = username;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public String getSecurity_question() {
+		return security_question;
+	}
+	public void setSecurity_question(String security_question) {
+		this.security_question = security_question;
+	}
+	public String getSecurity_answer() {
+		return security_answer;
+	}
+	public void setSecurity_answer(String security_answer) {
+		this.security_answer = security_answer;
+	}
+	@Override
+	public String toString() {
+		return "Dxc_Users [userid=" + userid + ", username=" + username + ", password=" + password
+				+ ", security_question=" + security_question + ", security_answer=" + security_answer + "]";
+	}
+	public DxcUsers(int userid, String username, String password, String security_question, String security_answer) {
+		super();
+		this.userid = userid;
+		this.username = username;
+		this.password = password;
+		this.security_question = security_question;
+		this.security_answer = security_answer;
+	}
+	public DxcUsers() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	
+	
+	
+
+}
+-------------------
+
+--------------dao-------------
+
+package com.bootmvctask.bootmvctask.dao;
+
+import javax.transaction.Transactional;
+
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.bootmvctask.bootmvctask.model.DxcUsers;
+
+@Component
+@Transactional
+public class DxcUsersDao {
+
+	@Autowired
+	SessionFactory sessionFactory;
+
+	public String saveUser(DxcUsers dxcUsers) {
+		
+		try {
+			Session session = sessionFactory.getCurrentSession();
+			session.save(dxcUsers);
+			
+
+			return "Successfully user created!!!!";
+		} catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+			System.out.println("exception");
+		}
+
+		return "Sorry cannot create user";
+	}
+
+	public DxcUsers getUserInfo(int userId) {
+		Session session = null;
+		DxcUsers user = null;
+
+		session = sessionFactory.getCurrentSession();
+		user = session.get(DxcUsers.class, userId);
+		System.out.println("User Data : "+user);
+		
+		return user;
+	}
+	 
+	public DxcUsers getSecInfo(int userId) {
+		Session session = null;
+		DxcUsers user = null;
+		session = sessionFactory.getCurrentSession();
+		user = session.get(DxcUsers.class, userId);
+		return user;
+		
+	}
+
+	public void changePassword(String password,int userId) {
+		DxcUsers user = null;
+		Session session = null;
+		
+		user = getSecInfo(userId);
+		user.setPassword(password);
+
+		session = this.sessionFactory.getCurrentSession();
+		
+			session.update(user);
+	}
+	
+
+	
+}
+--------------------
+
+
+server.port=1030
+spring.mvc.view.suffix=.jsp
+spring.mvc.view.prefix=/views/
+
+# Keep the connection alive if idle for a long time (needed in production)
+spring.datasource.testWhileIdle = true
+spring.datasource.validationQuery = SELECT 1
+
+spring.jpa.show-sql = true
+
+spring.jpa.properties.hibernate.current_session_context_class=org.springframework.orm.hibernate4.SpringSessionContext
+
+
+spring.jpa.hibernate.naming.implicit-strategy=org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyHbmImpl
+spring.jpa.hibernate.naming.physical-strategy=org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.OracleDialect
+spring.jpa.hibernate.ddl-auto=update
+
+# Oracle settings
+spring.datasource.url=jdbc:oracle:thin:@localhost:1521:xe
+spring.datasource.username=dxcfs
+spring.datasource.password=pass
+spring.datasource.driver-class-name=oracle.jdbc.driver.OracleDriver
+# logging
+logging.pattern.console=%d{yyyy-MM-dd HH:mm:ss} %-5level %logger{36} - %msg%n
+logging.level.org.hibernate.SQL=debug
+
+--------------------------------
+
+===============jsp pages=================
+
+-----------home.jsp-----------
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+body
+{
+background-image: url("first.jpg");
+background-repeat: no-repeat;
+background-size: cover;
+opacity: 0.6;
+}
+
+</style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+body {font-family: , Helvetica, sans-serif;}
+* {box-sizing: border-box;}
+
+.input-container {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  outline: none;
+}
+
+.input-field:focus {
+  border: 2px solid dodgerblue;
+}
+
+/* Set a style for the submit button */
+.btn {
+  background-color: red;
+  color: white;
+  padding: 15px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+}
+
+.btn:hover {
+  opacity: 5;
+}
+</style>
+<script type="text/javascript">
+
+
+</script>
+
+</head>
+
+<body>
+
+<form action="regdata" method="post" style="max-width:300px;margin:auto">
+   <center><h1 style="color: Black" > REGISTRATION PAGE </h1></center>
+
+   <div class="input-container">
+    USERID<input class="input-field" type="text" placeholder="User Id" name="userid"  onkeypress ="test(event)" required>
+  </div>
+  
+  <div class="input-container">
+    USERNAME<input class="input-field" type="text" placeholder="User name" name="username"  onkeypress ="test(event)" required>
+  </div>
+
+
+  
+  <div class="input-container">
+    
+   
+    PASSWORD<input class="input-field" type="password" placeholder="Password" name="password"  required>
+  </div>
+
+
+ <div class="input-container">
+    
+  
+
+      SECURITY_QES<select name="security_question">
+     <option>security Question</option>
+     <option>What is Your First name?</option>
+     <option>What is your favourite colour?</option>
+     <option>What is Your favourite Sport?</option>
+     <option>What is your pet name?</option>
+     <option>What is your first school name?</option>
+     <option>What is your first child name?</option>
+     <option>What is Your birth sign?</option>
+     
+      </select>
+    </div>
+
+ </div>
+  <div class="input-container">
+    SECURITY_ANS:<input class="input-field" type="text" placeholder="Security Ans" name="security_answer"  onkeypress ="test(event)" required>
+
+
+  </div>
+ 
+
+</body>
+
+  <button type="submit" class="btn">Register</button>
+</form>
+
+</body>
+</html>
+
+---------------changepass-----------
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<style type="text/css">
+body
+{
+background: url("first.jpg");
+background-repeat: no-repeat;
+background-size:100 %;
+opacity: 2;
+}
+
+</style>
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Add icon library -->
+<link rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+body {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+.input-container {
+	display: -ms-flexbox; /* IE10 */
+	display: flex;
+	width: 100%;
+	margin-bottom: 15px;
+}
+
+
+
+.input-field {
+	width: 100%;
+	padding: 10px;
+	outline: none;
+}
+
+.input-field:focus {
+	border: 2px solid dodgerblue;
+}
+
+/* Set a style for the submit button */
+.btn {
+	background-color: green;
+	color: white;
+	padding: 15px 20px;
+	border: none;
+	cursor: pointer;
+	width: 100%;
+	opacity: 0.9;
+}
+
+.btn:hover {
+	opacity: 1;
+}
+</style>
+<script type="text/javascript">
+	
+</script>
+</head>
+<body>
+
+
+<h2>${userId}</h2>
+	<form action="changepass" method="get"
+		style="max-width: 300px; margin: auto">
+		<center>
+			<h2 style="color: black">CHANGE PASSWORD</h2>
+		</center>
+		<div class="input-container">
+    
+    <input class="input-field" type="hidden" placeholder="User Id" name="userid"  value="${userId}" onkeypress ="test(event)" required>
+  </div>
+		
+		<div class="input-container">
+        PASSWORD<input class="input-field"type="password" placeholder="Password" name="password" required>
+		</div>
+		<div class="input-container">
+		CONFORMPASSWORD<input class="input-field" type="password" placeholder="Conform Password" name="conformPass"
+				required>
+		</div>
+		<button type="submit" class="btn">Login</button>
+	</form>
+	
+</body>
+</html>
+
+
+
+---------------display----------------
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<style>
+body {
+    background-image: url("first.jpg");
+    background-repeat: no-repeat;
+ background-size: cover;
+opacity: 0.6;
+}
+</style>
+</head>
+<body>
+<center>
+<h1>  Registered Successfully</h1>
+
+<p>${status}</p>
+<form action="displayLogin" method="get">
+	<input type="submit" value="LoginPage">
+</form>
+</center>
+</body>
+</html>
+
+-----------------------errorpage----------
+
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+</head>
+<body>
+
+<center>
+	<h1 style="color: red; font: inherit;"> Enter The Details Correctly</h1>
+	
+<form action="error" method="get">
+	<input type="submit" value="LoginPage">
+</form>
+</center>
+</body>
+</html>
+--------------------------fail----------
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<style type="text/css">
+
+body
+{
+background-image: url("first.jpg");
+ background-repeat: 2;
+background-size: 50%;
+opacity: 4;
+}
+
+
+</style>
+</head>
+<body>
+
+<form action="forgotpass">
+<center>
+	<h1 >Login Failed Please Enter details correctly</h1>
+	<input type="submit" value="Forgot Password?">
+	</center>
+</form>
+
+</body>
+</html>
+
+-----------------------forgot pass-------------
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<style type="text/css">
+body
+{
+background: url("first.jpg");
+background-repeat: no-repeat;
+background-size: 100%;
+opacity: 3;
+}
+
+</style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box;}
+
+.input-container {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  outline: none;
+}
+
+.input-field:focus {
+  border: 2px solid dodgerblue;
+}
+
+/* Set a style for the submit button */
+.btn {
+  background-color: green;
+  color: white;
+  padding: 15px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 4;
+}
+
+.btn:hover {
+  opacity: 2;
+}
+</style>
+<script type="text/javascript">
+
+</script>
+
+</head>
+<body>
+
+
+
+<form action="pass" method="get" style="max-width:300px;margin:auto">
+
+   <center><h2 style="color: Black" > Please Enter The Details </h2></center>
+
+   <div class="input-container">
+    USERID<input class="input-field" type="text" placeholder="User Id" name="userid"  onkeypress ="test(event)" required>
+  </div>
+	
+	<div class="input-container">
+  
+
+      SECURITY_QES<select name="security_question">
+     <option>security Question</option>
+     <option>What is Your First name?</option>
+     <option>What is your favourite colour?</option>
+     <option>What is Your favourite Sport?</option>
+     <option>What is your pet name?</option>
+     <option>What is your first school name?</option>
+     <option>What is your first child name?</option>
+     <option>What is Your birth sign?</option>
+     
+      </select>
+    </div>
+
+
+  <div class="input-container">
+    SECURITY_ANS<input class="input-field" type="text" placeholder="Security Ans" name="security_answer"  onkeypress ="test(event)" required>
+
+
+  </div>
+ 
+
+  <button type="submit" class="btn">Proceed</button>
+</form>
+
+
+</body>
+</html>
+
+---------------------sucess------------
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+<title>Insert title here</title>
+<style>
+body {
+    background-image: url("first.jpg");
+    background-repeat: no-repeat;
+   background-size: 100%;
+    opacity: 4;
+}
+</style>
+</head>
+<body>
+<center>
+
+	<h1 >Login  successfull</h1>
+	<h1> Welcome----------!!!</h1>
+	</center>
+</body>
+</html>
+
+------------------userlogin----------
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+	pageEncoding="ISO-8859-1"%>
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+body
+{
+background-image: url("first.jpg");
+background-repeat: no-repeat;
+background-size: cover;
+opacity: 4;
+}
+
+</style>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Add icon library -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box;}
+
+.input-container {
+  display: -ms-flexbox; /* IE10 */
+  display: flex;
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  outline: none;
+}
+
+.input-field:focus {
+  border: 2px solid dodgerblue;
+}
+
+/* Set a style for the submit button */
+.btn {
+  background-color: red;
+  color: black;
+  padding: 15px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  opacity: 0.9;
+}
+
+.btn:hover {
+  opacity: 1;
+}
+</style>
+<script type="text/javascript">
+
+
+</script>
+
+</head>
+
+<body>
+
+<form action="login" method="get" style="max-width:300px;margin:auto">
+   <center><h2 style="color: Black" > LOGIN PAGE </h2></center>
+
+   <div class="input-container">
+    USERID<input class="input-field" type="text" placeholder="User Id" name="userid"  onkeypress ="test(event)" required>
+  </div>
+  
+  <div class="input-container">
+    USERNAME<input class="input-field" type="text" placeholder="User name" name="username"  onkeypress ="test(event)" required>
+  </div>
+
+
+  
+  <div class="input-container">
+   
+    PASSWORD<input class="input-field" type="password" placeholder="Password" name="password"  required>
+  </div>
+
+
+
+</body>
+
+  <button type="submit" class="btn">Login</button>
+</form>
+
+</body>
+</html>
+
+---====================---------------
+
+
+
+-----pom.xml-------------
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+<modelVersion>4.0.0</modelVersion>
+<groupId>dxcresthib</groupId>
+<artifactId>Dxc-RestHib</artifactId>
+<version>0.0.1-SNAPSHOT</version>
+<name>Dxc-RestHib</name>
+<description>Demo project for Spring Boot</description>
+
+
+    <properties>
+        <start-class>spring-boot-example.Application</start-class>
+        <java.version>1.8</java.version>
+    </properties>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.1.RELEASE</version>
+    </parent>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+        </dependency>
+        <dependency>
+                 <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+            <version>1.2</version>
+              </dependency>
+        
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.tomcat</groupId>
+                    <artifactId>tomcat-jdbc</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+<!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-jasper -->
+<dependency>
+    <groupId>org.apache.tomcat</groupId>
+    <artifactId>tomcat-jasper</artifactId>
+    <version>8.5.11</version>
+</dependency>
+
+
+        <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
+
+
+-------------------------------
+
